@@ -6,6 +6,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<context:property-placeholder location="/WEB-INF/spring/email/email.properties"/>
+	
 	<!-- 메일발송 SMTP : https://velog.io/@hwaya2828/SMTP -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.gmail.com"></property>
