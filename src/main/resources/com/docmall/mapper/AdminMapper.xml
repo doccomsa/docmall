@@ -15,5 +15,16 @@
 	
 	</select>
 	
+	<update id="login_date" parameterType="String">
+	
+		UPDATE
+			ADMIN_TBL
+		SET
+			ADMIN_VISIT_DATE = sysdate
+		WHERE 
+			ADMIN_ID = #{admin_id}			
+		
+	</update>
+	
 
 </mapper>  

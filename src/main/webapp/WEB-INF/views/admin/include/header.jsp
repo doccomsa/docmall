@@ -9,7 +9,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>A</b>LT</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Admin</b>LTE</span>
+      <span class="logo-lg"><b>Admin</b> DocMall</span>
     </a>
 
     <!-- Header Navbar -->
@@ -20,6 +20,12 @@
       </a>
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
+      	<ul class="nav navbar-nav">
+          <li class="dropdown messages-menu">
+            <!-- Menu toggle button -->
+            <a href="/">[Docmall]</a>          
+          </li>
+        </ul>
         <ul class="nav navbar-nav">
           <li class="dropdown messages-menu">
             <!-- Menu toggle button -->
