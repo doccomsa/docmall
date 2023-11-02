@@ -1,5 +1,7 @@
 package com.docmall.service;
 
-public interface AdProductService {
+import com.docmall.domain.ProductVO;
 
+public interface AdProductService {
+	void pro_insert(ProductVO vo);
 }
