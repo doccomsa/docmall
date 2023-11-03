@@ -260,9 +260,9 @@ CREATE TABLE PRODUCT_TBL(
         PRO_PUBLISHER       VARCHAR2(50)            NOT NULL,
         PRO_CONTENT         VARCHAR2(4000)  /* CLOB */                  NOT NULL,       -- 내용이 4000BYTE 초과여부판단?
         PRO_UP_FOLDER       VARCHAR2(50)             NOT NULL,
-        PRO_IMG             VARCHAR2(50)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
+        PRO_IMG             VARCHAR2(100)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
         PRO_AMOUNT          NUMBER                  NOT NULL,
-        PRO_BUY             CHAR(1)                 NOT NULL,
+        PRO_BUY             VARCHAR2(10)                 NOT NULL,
         PRO_DATE            DATE DEFAULT SYSDATE    NOT NULL,
         PRO_UPDATEDATE      DATE DEFAULT SYSDATE    NOT NULL,
         FOREIGN KEY(CG_CODE) REFERENCES CATEGORY_TBL(CG_CODE)

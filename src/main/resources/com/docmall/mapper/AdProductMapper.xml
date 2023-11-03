@@ -13,5 +13,60 @@
 	
 	</insert>
 	
+	<!-- 공통된 sql구문작업 : 검색조건 -->
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+			<foreach collection="typeArr" item="type">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">
+                            PRO_NAME like '%' || #{keyword} || '%'
+						</when>
+						<when test="type == 'C'.toString()">
+                            PRO_NUM	 like '%' || #{keyword} || '%'
+						</when>
+						<when test="type == 'P'.toString()">
+							PRO_PUBLISHER like '%' || #{keyword} || '%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	
+	</sql>
+	
+	
+	<!--  CDATA 섹션 -->
+	<select id="pro_list" resultType="com.docmall.domain.ProductVO" parameterType="com.docmall.dto.Criteria">
+		<![CDATA[
+		select 
+    		PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
+		from 
+		    (
+		    select /*+INDEX_DESC(PRODUCT_TBL pk_pro_num) */
+		        rownum rn, PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
+		    from 
+		        PRODUCT_TBL
+		    where 
+		    ]]>
+		    
+		    <include refid="criteria"></include>
+		    
+		    <![CDATA[
+		        rownum <= #{pageNum} * #{amount}
+		    )
+		where 
+		    rn > (#{pageNum} -1) * #{amount}
+		]]>
+	</select>
+	
+	<select id="getTotalCount" resultType="int">
+		select count(*) from PRODUCT_TBL where
+		
+		<include refid="criteria"></include>
+		
+		PRO_NUM > 0
+	</select>
+	
 
 </mapper>  
