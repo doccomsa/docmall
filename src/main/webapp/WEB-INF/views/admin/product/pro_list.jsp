@@ -86,7 +86,7 @@ desired effect
 								<td><input type="checkbox"></td>
 								<td>${productVO.pro_num }</td>
 								<td>
-									<a class="move" href="#" data-bno="${productVO.pro_num }"><img src="">${productVO.pro_up_folder }${productVO.pro_img }</a>
+									<a class="move" href="#" data-bno="${productVO.pro_num }"><img src="/admin/product/imageDisplay?dateFolderName=${productVO.pro_up_folder }&fileName=s_${productVO.pro_img }"></a>
 									<a class="move" href="#" data-bno="${productVO.pro_num }">${productVO.pro_name }</a>
 								</td>
 								<td>${productVO.pro_price }</td>
@@ -106,7 +106,7 @@ desired effect
 									<!-- 이전 표시여부 -->
 									<c:if test="${pageMaker.prev }">
 										<li class="page-item">
-											<a href="/board/list?pageNum=${pageMaker.startPage - 1 }" class="page-link">Previous</a>
+											<a href="/board/list?pageNum=${pageMaker.startPage - 1 }" class="page-link movepage">Previous</a>
 										</li>
 									</c:if>
 									<!-- 페이지번호 출력 -->
@@ -121,7 +121,7 @@ desired effect
 									<!--  다음 표시여부 -->
 									<c:if test="${pageMaker.next }">
 										<li class="page-item">
-										<a href="/board/list?pageNum=${pageMaker.endPage + 1 }" class="page-link" href="#">Next</a>
+										<a href="/board/list?pageNum=${pageMaker.endPage + 1 }" class="page-link movepage" href="#">Next</a>
 										</li>
 									</c:if>
 									
@@ -145,8 +145,8 @@ desired effect
 									<button type="submit" class="btn btn-primary">검색</button>
 								</form>
 								<!--1)페이지번호 클릭할 때 사용  [이전]  1	2	3	4	5 [다음]  action="/board/list"-->
-								<!--2)목록에서 제목 클릭할 때 사용  action="/board/get" -->
-								<form id="actionForm" action="/board/list" method="get">
+								<!--2)목록에서 상품이미지 또는 상품명 클릭할 때 사용  action="/board/get" -->
+								<form id="actionForm" action="" method="get">
 									<input type="hidden" name="pageNum" id="pageNum" value="${pageMaker.cri.pageNum}" />
 									<input type="hidden" name="amount"  id="amount" value="${pageMaker.cri.amount}" />
 									<input type="hidden" name="type" id="type" value="${pageMaker.cri.type}" />
@@ -250,83 +250,20 @@ desired effect
 
 <!-- REQUIRED JS SCRIPTS -->
 <%@include file="/WEB-INF/views/admin/include/plugin2.jsp" %>
-<script src="/bower_components/ckeditor/ckeditor.js"></script>
+
 <script>
   $(document).ready(function() {
 
-    // ckeditor 환경설정. 자바스크립트 Ojbect문법
-    var ckeditor_config = {
-			resize_enabled : false,
-			enterMode : CKEDITOR.ENTER_BR,
-			shiftEnterMode : CKEDITOR.ENTER_P,
-			toolbarCanCollapse : true,
-			removePlugins : "elementspath", 
-			//업로드 탭기능추가 속성. CKEditor에서 파일업로드해서 서버로 전송클릭하면 , 이 주소가 동작된다.
-			filebrowserUploadUrl: '/admin/product/imageUpload' 
-    }
+    let actionForm = $("#actionForm");
 
-    CKEDITOR.replace("pro_content", ckeditor_config);
-
-    console.log("ckediotr 버전: ", CKEDITOR.version);
-
-
-
-    // 1차카테고리 선택
-    // document.getElementById("firstCategory")
-    $("#firstCategory").change(function() {
-      // $(this) : option태그중 선택한 option태그를 가리킴.
-      let cg_parent_code = $(this).val();
-
-      // console.log("1차카테고리 코드", cg_parent_code);
-
-      // 1차카테고리 선택에 의한 2차카테고리 정보를 가져오는 url
-      let url = "/admin/category/secondCategory/" + cg_parent_code; // + ".json";
-
-      // $.getJSON() : 스프링에 요청시 데이타를 json으로 받는 기능. ajax기능제공.
-      $.getJSON(url, function(secondCategoryList) {
-        // console.log("2차카테고리 정보", secondCategoryList);
-
-        // console.log("2차카테고리 개수", secondCategoryList.length);
-
-        // 2차카테고리 select태그참조.
-        let secondCategory = $("#secondCategory");
-        let optionStr = "";
-        // <option value='10'>바지</option>
-        
-        // find("css선택자") : 태그명, id속성이름, class속성이름
-        secondCategory.find("option").remove(); // 2차카테고리의 option제거
-        secondCategory.append("<option value=''>2차 카테고리 선택</option>");
-
-        for(let i=0; i<secondCategoryList.length; i++) {
-          optionStr += "<option value='" + secondCategoryList[i].cg_code + "'>" + secondCategoryList[i].cg_name + "</option>";
-
-        }
-
-        // console.log(optionStr);
-        secondCategory.append(optionStr); // 2차카테고리 <option>태그들이 추가.
-
-
-      });
+    // [이전] 1 2 3 4 5 [다음] 클릭 이벤트 설정. <a>태그
+    $(".movepage").on("click", function(e) {
+      e.preventDefault(); // a태그의 링크기능을 제거.
+    });
+    
 
       
-    });
-
-    //파일첨부시 이미지 미리보기
-    // 파일첨부에 따른 이벤트관련정보를 e라는 매개변수를 통하여, 참조가 됨.
-    $("#uploadFile").change(function(e) {
-      let file = e.target.files[0]; // 선택파일들중 첫번째 파일.
-
-      let reader = new FileReader(); // 첨부된 파일을 이용하여, File객체를 생성하는 용도
-      reader.readAsDataURL(file); // reader객체에 파일정보가 할당.
-
-
-      reader.onload = function(e) {
-        // <img id="img_preview" style="width:200px;height:200px;">
-        // e.target.result : reader객체의 이미지파일정보
-        $("#img_preview").attr("src", e.target.result);
-      }
-      
-    });
+   
 
   });
 </script>

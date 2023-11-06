@@ -10,11 +10,13 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -156,9 +158,15 @@ public class AdProductController {
 	@GetMapping("/pro_list")
 	public void pro_list(Criteria cri, Model model) throws Exception {
 		
+		// this(1, 10);
+		// 10 -> 2
+		cri.setAmount(2);
+		
+		
 		List<ProductVO> pro_list = adProductService.pro_list(cri);
 		
 		// 날짜폴더의 역슬래시를 슬래시로 바꾸는 작업.  이유? 역슬래시로 되어있는 정보가 스프링으로 보내는 요청데이타에 사용되면 에러발생.
+		// 스프링에서 처리 안하면, 자바스크립에서 처리 할수도 있다.
 		pro_list.forEach(vo -> {
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
 		});
@@ -166,6 +174,14 @@ public class AdProductController {
 		
 		int totalCount = adProductService.getTotalCount(cri);
 		model.addAttribute("pageMaker", new PageDTO(cri, totalCount));
+	}
+	
+	//상품리스트에서 보여줄 이미지.  <img src="매핑주소">
+	@ResponseBody
+	@GetMapping("/imageDisplay") // /admin/product/imageDisplay?dateFolderName=값1&fileName=값2
+	public ResponseEntity<byte[]> imageDisplay(String dateFolderName, String fileName) throws Exception {
+		
+		return FileUtils.getFile(uploadPath + dateFolderName, fileName);
 	}
 	
 	
