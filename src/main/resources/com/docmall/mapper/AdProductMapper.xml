@@ -68,5 +68,57 @@
 		PRO_NUM > 0
 	</select>
 	
+	<!-- 체크상품 수정작업 -->
+	<update id="pro_checked_modify1" parameterType="Map">
+	
+		UPDATE 
+			PRODUCT_TBL 
+		SET 
+			PRO_PRICE = #{pro_price}, 
+			PRO_BUY = #{pro_buy} 
+		WHERE 
+			PRO_NUM = #{pro_num}
+	
+	</update>
+	
+	<update id="pro_checked_modify2">
+	
+		<foreach collection="list" item="item" open="declare begin" separator=";" close="; end;">
+		
+			UPDATE 
+				PRODUCT_TBL 
+			SET 
+				PRO_PRICE = #{item.pro_price}, 
+				PRO_BUY = #{item.pro_buy} 
+			WHERE 
+				PRO_NUM = #{item.pro_num}
+		
+		</foreach>
+	
+	
+	</update>
+	
+
+	<select id="pro_edit" resultType="com.docmall.domain.ProductVO" parameterType="Integer">
+	
+		SELECT 
+			pro_num, cg_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate
+		FROM 
+			PRODUCT_TBL 
+		WHERE 
+			pro_num = #{pro_num}
+	
+	</select>
+	
+	<!-- 상품테이블의 2차카테고리코드의 1차카테고리 정보 -->
+	<select id="get" parameterType="Integer" resultType="com.docmall.domain.CategoryVO">
+	
+		SELECT 
+			cg_code, cg_parent_code, cg_name 
+		FROM 
+			CATEGORY_TBL 
+		WHERE cg_code = #{cg_code}
+	
+	</select>
 
 </mapper>  
