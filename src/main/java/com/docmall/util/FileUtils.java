@@ -139,4 +139,20 @@ public class FileUtils {
 		return entity;
 	}
 	
+	//파일삭제
+	// String uploadPath : 업로드 폴더명.  servlet-context.xml에 uploadPath bean정보 사용.
+	// String folderName : 날짜폴더명
+	// String fileName : 파일명
+	public static void deleteFile(String uploadPath, String folderName, String fileName) {
+		
+		
+		// File.separatorChar : 배포된 서버의 운영체제에서 사용하는 파일의 경로구분자를 반환
+		// 예> 윈도우즈 : \  리눅스 : /
+		
+		//1)원본이미지 삭제
+		new File((uploadPath + folderName + "\\" + fileName).replace('\\', File.separatorChar)).delete();
+		//2)썸네일이미지 삭제
+		new File((uploadPath + folderName + "\\" +  "s_" + fileName).replace('\\', File.separatorChar)).delete();
+	}
+	
 }

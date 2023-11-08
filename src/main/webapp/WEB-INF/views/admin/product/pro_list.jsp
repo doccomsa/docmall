@@ -102,7 +102,7 @@ desired effect
 								<td>${productVO.pro_num }</td>
 								<td>
 									<a class="move" href="#" data-bno="${productVO.pro_num }"><img src="/admin/product/imageDisplay?dateFolderName=${productVO.pro_up_folder }&fileName=s_${productVO.pro_img }"></a>
-									<a class="move" href="#" data-bno="${productVO.pro_num }">${productVO.pro_name }</a>
+									<a class="move pro_name" href="#" data-bno="${productVO.pro_num }">${productVO.pro_name }</a>
 								</td>
 								<td><input type="text" name="pro_price" value="${productVO.pro_price }"></td>
 								<td><fmt:formatDate value="${productVO.pro_date }" pattern="yyyy-MM-dd" /></td>
@@ -112,8 +112,8 @@ desired effect
 										<option value="N" ${productVO.pro_buy == 'N'? 'selected':''}>판매불가능</option>
 									</select>
 								</td>
-								<td><button type="button" class="btn btn-primary" name="btn_edit">수정</button></td>
-								<td><button type="button" class="btn btn-danger btn_del">삭제</button></td>
+								<td><button type="button" class="btn btn-primary" name="btn_pro_edit">수정</button></td>
+								<td><button type="button" class="btn btn-danger btn_pro_del">삭제</button></td>
 							</tr>
 							</c:forEach>
 							</tbody></table>
@@ -393,7 +393,7 @@ desired effect
   });
     
   //상품수정
-  $("button[name='btn_edit']").on("click", function() {
+  $("button[name='btn_pro_edit']").on("click", function() {
     
     //수정 상품코드
     let pro_num = $(this).parent().parent().find("input[name='check']").val();
@@ -411,6 +411,31 @@ desired effect
     
 
   });
+
+  //상품삭제.  화살표함수 사용시 상품코드값을 읽을수 없다.
+  $(".btn_pro_del").on("click", function() {
+    
+    // text(): 입력양식태그가 아닌 일반태그의 값을 변경하거나 읽을 때 사용 
+    let pro_name = $(this).parent().parent().find(".pro_name").text();
+    if(!confirm(pro_name + " 상품을 삭제하겠읍니까?")) return;
+
+    // val() : input, select, textarea태그의 값을 변경하거나 읽을 때 사용    
+    let pro_num = $(this).parent().parent().find("input[name='check']").val();
+    
+    console.log("상품코드", pro_num);
+
+    actionForm.find("input[name='pro_num']").remove();
+
+    // <input type="hidden" name="pro_num" id="pro_num" value="24" />
+    actionForm.append('<input type="hidden" name="pro_num" id="pro_num" value="' + pro_num + '" />');
+    
+    actionForm.attr("method", "post");
+    actionForm.attr("action", "/admin/product/pro_delete");
+    actionForm.submit();
+
+
+  });
+
 
 
 }); // ready 이벤트

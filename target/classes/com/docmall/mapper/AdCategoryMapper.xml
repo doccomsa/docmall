@@ -28,5 +28,16 @@
 	
 	</select>
 	
+	<!-- 상품테이블의 2차카테고리코드의 1차카테고리 정보 -->
+	<select id="get" parameterType="Integer" resultType="com.docmall.domain.CategoryVO">
+	
+		SELECT 
+			cg_code, cg_parent_code, cg_name 
+		FROM 
+			CATEGORY_TBL 
+		WHERE cg_code = #{cg_code}
+	
+	</select>
+	
 
 </mapper>  

@@ -69,8 +69,16 @@ public class AdProductServiceImpl implements AdProductService {
 	}
 
 	@Override
-	public CategoryVO get(Integer cg_code) {
+	public void pro_edit(ProductVO vo) {
 		// TODO Auto-generated method stub
-		return adProductMapper.get(cg_code);
+		adProductMapper.pro_edit_ok(vo);
 	}
+
+	@Override
+	public void pro_delete(Integer pro_num) {
+		// TODO Auto-generated method stub
+		adProductMapper.pro_delete(pro_num);
+	}
+
+	
 }

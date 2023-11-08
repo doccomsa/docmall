@@ -20,5 +20,9 @@ public interface AdProductService {
 	
 	ProductVO pro_edit(Integer pro_num);
 	
-	CategoryVO get(Integer cg_code);
+	void pro_edit(ProductVO vo);
+	
+	//상품삭제
+	void pro_delete(Integer pro_num);
+
 }

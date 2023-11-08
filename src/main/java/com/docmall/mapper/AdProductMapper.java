@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.docmall.domain.CategoryVO;
 import com.docmall.domain.ProductVO;
 import com.docmall.dto.Criteria;
 import com.docmall.dto.ProductDTO;
@@ -30,5 +29,11 @@ public interface AdProductMapper {
 	
 	ProductVO pro_edit(Integer pro_num);
 	
-	CategoryVO get(Integer cg_code);
+	//상품수정
+	void pro_edit_ok(ProductVO vo);
+	
+	//상품삭제
+	void pro_delete(Integer pro_num);
+	
+	
 }
