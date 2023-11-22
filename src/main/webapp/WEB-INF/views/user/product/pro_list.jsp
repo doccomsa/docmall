@@ -55,10 +55,10 @@
     <c:forEach items="${pro_list }" var="productVO">
     <div class="col-md-3">
 	    <div class="card mb-4 shadow-sm">
-            <img width="100%" height="200" src="/user/product/imageDisplay?dateFolderName=${productVO.pro_up_folder }&fileName=${productVO.pro_img}">
+            <img class="btn_pro_img"  data-pro_num="${productVO.pro_num }"  width="100%" height="200" style="cursor: pointer;" src="/user/product/imageDisplay?dateFolderName=${productVO.pro_up_folder }&fileName=${productVO.pro_img}">
 
             <div class="card-body">
-              <p class="card-text">${productVO.pro_name }</p>
+              <p class="card-text btn_pro_img" style="cursor: pointer;" data-pro_num="${productVO.pro_num }">${productVO.pro_name }</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <button type="button" name="btn_cart_add" data-pro_num="${productVO.pro_num}" class="btn btn-sm btn-outline-secondary">Cart</button>
@@ -146,7 +146,7 @@
         // console.log("장바구니");
 
         $.ajax({
-          url: '/cart/cart_add',
+          url: '/user/cart/cart_add',
           type: 'post',
           data: {pro_num : $(this).data("pro_num"), cart_amount : 1},
           dataType : 'text',
@@ -163,8 +163,21 @@
 
       });
 
+      // 상품이미지 또는 상품명 클릭시 상품상세로 보내는 작업
+      $(".btn_pro_img").on("click", function() {
+        console.log("상품상세설명");
 
-	});
+        actionForm.attr("action", "/user/product/pro_detail");
+
+        let pro_num = $(this).data("pro_num");
+
+        actionForm.find("input[name='pro_num']").remove();
+        // <input type='hidden' name='pro_num' value='상품코드' >
+        actionForm.append("<input type='hidden' name='pro_num' value='" + pro_num +  "'>");
+        actionForm.submit();
+      });
+
+	}); // ready event end
 
   </script>  
   </body>

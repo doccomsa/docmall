@@ -27,4 +27,10 @@ public class UserProductServiceImpl implements UserProductService {
 		// TODO Auto-generated method stub
 		return userProductMapper.getTotalCount(cg_code);
 	}
+
+	@Override
+	public ProductVO pro_detail(Integer pro_num) {
+		// TODO Auto-generated method stub
+		return userProductMapper.pro_detail(pro_num);
+	}
 }

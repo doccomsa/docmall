@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.docmall.domain.CartVO;
@@ -39,6 +40,8 @@ public class CartController {
 	@PostMapping("/cart_add")
 	public ResponseEntity<String> cart_add(CartVO vo, HttpSession session) throws Exception {
 		
+		log.info("장바구니: " + vo);
+		
 		ResponseEntity<String> entity = null;
 		
 		// ajax방식에서 상품코드,수량 2개정보만 전송되어옴. (로그인한 사용자의 아이디정보추가작업)
@@ -60,7 +63,7 @@ public class CartController {
 		
 		List<CartDTOList> cart_list = cartService.cart_list(mbsp_id);
 		
-		double cart_total_price = 0;
+		int cart_total_price = 0;
 		
 //		cart_list.forEach(vo -> {
 //			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
@@ -73,7 +76,9 @@ public class CartController {
 			CartDTOList vo = cart_list.get(i);
 			
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
-			cart_total_price += ((double)vo.getPro_price() - (vo.getPro_price() * vo.getPro_discount() * 1/100 )) * (double) vo.getCart_amount();
+			
+//			vo.setPro_discount(vo.getPro_discount() * 1/100);
+			cart_total_price += (vo.getPro_price() * vo.getCart_amount());
 		}
 		
 		
@@ -99,6 +104,47 @@ public class CartController {
 		cartService.cart_amount_change(cart_code, cart_amount);
 		
 		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		return entity;
+	}
+	
+	//장바구니 목록에서 개별삭제(ajax용)
+	@PostMapping("/cart_list_del")
+	public ResponseEntity<String> cart_list_del(Long cart_code) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		cartService.cart_list_del(cart_code);
+		
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		return entity;
+	
+	}
+	
+	//장바구니 목록에서 개별삭제(non-ajax용)
+	@GetMapping("/cart_list_del")
+	public String cart_list_del2(Long cart_code) throws Exception {
+		
+		cartService.cart_list_del(cart_code);
+		
+		return "redirect:/user/cart/cart_list";
+	}
+	
+	//장바구니 선택삭제
+	@PostMapping("/cart_sel_delete")
+	public ResponseEntity<String> cart_sel_delete(@RequestParam("cart_code_arr[]") List<Long> cart_code_arr) {
+		ResponseEntity<String> entity = null;
+		
+		//방법1. 하나씩 반복적으로 삭제.
+		/*
+		for(int i=0; i<cart_code_arr.size(); i++) {
+			cartService.cart_delete(cart_code_arr.get(i));
+		}
+		*/
+		
+		//방법2. mybatis foreach : https://java119.tistory.com/85
+		cartService.cart_sel_delete(cart_code_arr);
+		
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		
 		return entity;
 	}
 }
